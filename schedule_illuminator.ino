@@ -17,25 +17,28 @@ bool isLightOn = false;
 void setup() 
 {
   Serial.begin(115200);
-  attachInterrupt(MOVEMENT_SENSOR_PIN, movementDetected, RISING);
 
+  pinMode(MOVEMENT_SENSOR_PIN, INPUT);
   pinMode(RELAY_SIGNAL_PIN, OUTPUT);
   pinMode(LED_PIN, OUTPUT);
 
   digitalWrite(LED_PIN, LOW);
 }
 
-void loop() {
-   if (millis() - last_movement_time >= LIGHT_TIME) 
-      setLightOff();
-}
-
-void movementDetected() 
+void loop() 
 {
-   last_movement_time = millis();
-   setLightOn();
+  int data = digitalRead(MOVEMENT_SENSOR_PIN);
+  if (data == 1)
+  {
+    digitalWrite(RELAY_SIGNAL_PIN, LOW);
+    delay(15000);
+  }
+  else
+    digitalWrite(RELAY_SIGNAL_PIN, HIGH);
+   /*if (millis() - last_movement_time >= LIGHT_TIME) 
+      setLightOff();*/
 
-   digitalWrite(LED_PIN, !digitalRead(LED_PIN));
+   
 }
 
 void setLightOn()
