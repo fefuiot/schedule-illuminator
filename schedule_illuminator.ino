@@ -5,13 +5,13 @@
 // Connect G (near VV) of LoLin to GND of sensor and GND of relay
 // !!!!!
 
-#define LIGHT_TIME 1000 // In milliseconds
+#define LIGHT_TIME 5000 // In milliseconds
 
-#define MOVEMENT_SENSOR_PIN D0 // Connect OUT of senso to D0 on LoLin
+#define MOVEMENT_SENSOR_PIN D0 // Connect OUT of sensor to D0 on LoLin
 #define RELAY_SIGNAL_PIN D1 // Connect IN1 of relay to D1 on LoLin
 #define LED_PIN 2
 
-unsigned long long last_movement_time = 0;
+unsigned long long lastMovementTime = 0;
 bool isLightOn = false;
  
 void setup() 
@@ -27,18 +27,13 @@ void setup()
 
 void loop() 
 {
-  int data = digitalRead(MOVEMENT_SENSOR_PIN);
-  if (data == 1)
-  {
-    digitalWrite(RELAY_SIGNAL_PIN, LOW);
-    delay(15000);
-  }
+  if (digitalRead(MOVEMENT_SENSOR_PIN))
+    lastMovementTime = millis();
+  
+  if (millis() - lastMovementTime > LIGHT_TIME)
+    setLightOff();
   else
-    digitalWrite(RELAY_SIGNAL_PIN, HIGH);
-   /*if (millis() - last_movement_time >= LIGHT_TIME) 
-      setLightOff();*/
-
-   
+    setLightOn();
 }
 
 void setLightOn()
